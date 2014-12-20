@@ -33,43 +33,8 @@
 
     applyOpts(opts, canvas)
     setSizeEqualToParent(canvas)
-    attachEvents(context)
 
     return context
-  }
-
-  function attachEvents(context){
-    context.event = {}
-
-    ;['mousemove', 'mousedown', 'mouseup', 'mouseleave', 'mouseenter', 'touchstart', 'touchend', 'touchmove', 'touchenter', 'touchleave']
-      .forEach(function(eventName){
-        context.event[eventName] = noop
-        context.canvas.addEventListener(eventName, whenNotNoop.bind(null, eventName, relativeCoords))
-      })
-
-    ;['mousewheel', 'DOMMouseScroll', 'onmousewheel']
-      .forEach(function(eventName){
-        context.event['mousewheel'] = noop
-        context.canvas.addEventListener(eventName, whenNotNoop.bind(null, 'mousewheel', mouseWheel))
-      })
-
-    function whenNotNoop(eventName, parseEvent, e){
-      if(context.event[eventName] !== noop){
-        context.event[eventName](parseEvent(e))
-      }
-    }
-
-    function relativeCoords(e){
-      var rect = e.target.getBoundingClientRect()
-      return {
-        x: (e.clientX - rect.left),
-        y: (e.clientY - rect.top)
-      }
-    }
-
-    function mouseWheel(e){
-      return Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)))
-    }
   }
 
   function getCanvas(elem){
@@ -99,8 +64,9 @@
       document.body.style.margin = 0
       document.body.style.padding = 0
       document.body.style.overflow = 'hidden'
-      document.body.style.width = window.innerWidth + 'px'
-      document.body.style.height = window.innerHeight + 'px'
+      document.body.style.position = 'absolute'
+      document.body.style.width = '100%'
+      document.body.style.height =  '100%'
     }
   }
 
