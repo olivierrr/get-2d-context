@@ -1,30 +1,75 @@
 
-;(function(root, factory) {   
+;(function(root, factory) {
 
   // AMD   
   if (typeof define === 'function' && define.amd){
-    define('progressbar', [], function(){   
-      return factory()   
+    define('progressbar', [], function(){
+      return factory()
     })
   }
 
   // browserify    
-  else if (typeof module !== 'undefined' && module.exports){    
-    module.exports = factory()   
+  else if (typeof module !== 'undefined' && module.exports){
+    module.exports = factory()
   }
 
-  // Browser globals   
-  else{   
-    root.get2dContext = factory()   
+  // Browser globals
+  else{
+    root.get2dContext = factory()
   }
 
 })(this, function(){
 
+  var noop = function(){}
+
   function get2dContext(elem, opts){
     var canvas = getCanvas(elem)
+      , context
+
+    // canvas is not supported
+    if(!canvas.getContext || !(context = canvas.getContext('2d'))){
+      return false
+    }
+
     applyOpts(opts, canvas)
     setSizeEqualToParent(canvas)
-    return getContext(canvas)
+    attachEvents(context)
+
+    return context
+  }
+
+  function attachEvents(context){
+    context.event = {}
+
+    ;['mousemove', 'mousedown', 'mouseup', 'mouseleave', 'mouseenter', 'touchstart', 'touchend', 'touchmove', 'touchenter', 'touchleave']
+      .forEach(function(eventName){
+        context.event[eventName] = noop
+        context.canvas.addEventListener(eventName, whenNotNoop.bind(null, eventName, relativeCoords))
+      })
+
+    ;['mousewheel', 'DOMMouseScroll', 'onmousewheel']
+      .forEach(function(eventName){
+        context.event['mousewheel'] = noop
+        context.canvas.addEventListener(eventName, whenNotNoop.bind(null, 'mousewheel', mouseWheel))
+      })
+
+    function whenNotNoop(eventName, parseEvent, e){
+      if(context.event[eventName] !== noop){
+        context.event[eventName](parseEvent(e))
+      }
+    }
+
+    function relativeCoords(e){
+      var rect = e.target.getBoundingClientRect()
+      return {
+        x: (e.clientX - rect.left),
+        y: (e.clientY - rect.top)
+      }
+    }
+
+    function mouseWheel(e){
+      return Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)))
+    }
   }
 
   function getCanvas(elem){
@@ -34,14 +79,6 @@
       return appendNewCanvasAt(elem)
     }else{
       return appendNewCanvasAt(document.body)
-    }
-  }
-
-  function getContext(canvas){
-    if(!canvas.getContext || !canvas.getContext('2d')){
-      return false
-    }else{
-      return canvas.getContext('2d')
     }
   }
 
@@ -75,7 +112,7 @@
 
   function setSizeEqualToParent(elem){
     elem.width = elem.parentNode.offsetWidth
-    elem.height = elem.parentNode.offsetHeight    
+    elem.height = elem.parentNode.offsetHeight
   }
 
   function extend(defaults, options){
