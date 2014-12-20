@@ -1,0 +1,26 @@
+{
+  "name": "get-2d-context",
+  "version": "1.0.0",
+  "description": "get-2d-context ==============",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/olivierrr/get-2d-context.git"
+  },
+  "keywords": [
+    "canvas",
+    "2d",
+    "context",
+    "ctx",
+    "util"
+  ],
+  "author": "olivierrr",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/olivierrr/get-2d-context/issues"
+  },
+  "homepage": "https://github.com/olivierrr/get-2d-context"
+}
