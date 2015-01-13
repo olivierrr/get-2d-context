@@ -1,3 +1,5 @@
+## use [http://stack.gl packages](www.stack.gl)instead!
+
 ## usage
 
 ```js
