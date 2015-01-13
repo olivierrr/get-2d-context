@@ -1,6 +1,6 @@
 ## usage
 
-#### use [http://stack.gl packages](www.stack.gl)instead!
+#### use [stack.gl packages](http://stack.gl) instead!
 
 ```js
 var container = document.querySelector('#myContainer')
